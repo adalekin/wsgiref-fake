@@ -40,7 +40,7 @@ ws4py = ["ws4py>=0.5.1"]
 
 [tool.hatch.version]
 path = "wsgiref_fake/__init__.py"
-pattern = "VERSION = '(?P<version>[^']+)'"
+pattern = "VERSION = ['\"](?P<version>[^'\"]+)['\"]"
 
 [tool.hatch.build.targets.sdist]
 include = ["/wsgiref_fake", "/tests", "/README.md", "/LICENSE"]
