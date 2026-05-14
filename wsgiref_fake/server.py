@@ -1,17 +1,15 @@
-from wsgiref.simple_server import WSGIServer, make_server as make_server_
+from wsgiref.simple_server import WSGIServer
+from wsgiref.simple_server import make_server as make_server_
 
 import six
 from six.moves.socketserver import BaseServer
 
-from . import const
-from . import handlers
+from . import const, handlers
 
 
 class FakeWSGIServer(WSGIServer):
-    def __init__(self, server_address, RequestHandlerClass):  # noqa pylint: disable=super-init-not-called
-        BaseServer.__init__(  # noqa pylint: disable=non-parent-init-called
-            self, server_address, RequestHandlerClass
-        )
+    def __init__(self, server_address, RequestHandlerClass):
+        BaseServer.__init__(self, server_address, RequestHandlerClass)
         self.server_bind()
 
     def server_bind(self):
@@ -21,9 +19,7 @@ class FakeWSGIServer(WSGIServer):
         self.setup_environ()
 
 
-def make_server(  # noqa pylint: disable=bad-continuation
-    app, server_class=FakeWSGIServer, handler_class=handlers.FakeWSGIRequestHandler
-):
+def make_server(app, server_class=FakeWSGIServer, handler_class=handlers.FakeWSGIRequestHandler):
     def _wsgi_app_encoding_hack(app):
         def wrapper(*args, **kwargs):
             result = app(*args, **kwargs)

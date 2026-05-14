@@ -65,7 +65,7 @@ class FakeWebSocketWSGIHandler(SimpleHandler):
 
             if "upgrade" not in connection:
                 # This is not a websocket request, so we must not handle it
-                logger.warning("Client didn't ask for a connection " "upgrade")
+                logger.warning("Client didn't ask for a connection upgrade")
                 return None
         else:
             # This is not a websocket request, so we must not handle it
@@ -108,7 +108,7 @@ class FakeWebSocketWSGIHandler(SimpleHandler):
         version = self.environ.get("HTTP_SEC_WEBSOCKET_VERSION")
 
         if version not in self.SUPPORTED_VERSIONS:
-            msg = "Unsupported WebSocket Version: {0}".format(version)
+            msg = f"Unsupported WebSocket Version: {version}"
 
             logger.warning(msg)
             self.start_response(
@@ -132,7 +132,7 @@ class FakeWebSocketWSGIHandler(SimpleHandler):
         try:
             key_len = len(base64.b64decode(key))
         except TypeError:
-            msg = "Invalid key: {0}".format(key)
+            msg = f"Invalid key: {key}"
 
             logger.warning(msg)
             self.start_response("400 Bad Request", [])
@@ -141,7 +141,7 @@ class FakeWebSocketWSGIHandler(SimpleHandler):
 
         if key_len != 16:
             # 5.2.1 (3)
-            msg = "Invalid key: {0}".format(key)
+            msg = f"Invalid key: {key}"
 
             logger.warning(msg)
             self.start_response("400 Bad Request", [])
@@ -152,18 +152,14 @@ class FakeWebSocketWSGIHandler(SimpleHandler):
         self.environ.update(
             {
                 "wsgi.websocket_version": version,
-                "wsgi.websocket": WebSocket(
-                    self.environ, Stream(self.request_handler), self.request_handler
-                ),
+                "wsgi.websocket": WebSocket(self.environ, Stream(self.request_handler), self.request_handler),
             }
         )
 
         headers = [
             (
                 "Sec-WebSocket-Accept",
-                base64.b64encode(
-                    hashlib.sha1((key + self.WS_KEY).encode("utf-8")).digest()
-                ),
+                base64.b64encode(hashlib.sha1((key + self.WS_KEY).encode("utf-8")).digest()),
             )
         ]
 
@@ -194,12 +190,8 @@ class FakeWebSocketWSGIRequestHandler(WSGIRequestHandler):
             return
 
         # next line is where we'd have expect a configuration key somehow
-        handler = self.handler_class(
-            self.rfile, self.wfile, self.get_stderr(), self.get_environ()
-        )
-        handler.request_handler = (  # noqa pylint: disable=attribute-defined-outside-init
-            self
-        )
+        handler = self.handler_class(self.rfile, self.wfile, self.get_stderr(), self.get_environ())
+        handler.request_handler = self
         handler.run(self.server.get_app())
 
     def finish(self):

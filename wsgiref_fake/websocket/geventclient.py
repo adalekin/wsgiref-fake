@@ -1,20 +1,20 @@
 import gevent.fileobject
 import gevent.os
 
-from . import client
 from .. import socket
+from . import client
 
 
 class GeventFakeSocket(socket.FakeSocket):
-    def makefile(self, mode="r", bufsize=-1):  # noqa pylint: disable=unused-argument
-        fobj = super(GeventFakeSocket, self).makefile(mode, 0)
+    def makefile(self, mode="r", bufsize=-1):
+        fobj = super().makefile(mode, 0)
 
         return gevent.fileobject.FileObjectThread(fobj, mode=mode, bufsize=0)
 
-    def sendall(self, data, flags=0):  # noqa pylint: disable=unused-argument
+    def sendall(self, data, flags=0):
         gevent.os.tp_write(self.fd_w.origin, data)
 
-    def recv(self, buffersize, flags=None):  # noqa pylint: disable=unused-argument
+    def recv(self, buffersize, flags=None):
         return gevent.os.tp_read(self.fd_r.origin, buffersize)
 
 

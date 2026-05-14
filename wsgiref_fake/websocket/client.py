@@ -5,8 +5,7 @@ from ws4py.client import WebSocketBaseClient
 from ws4py.exc import HandshakeError
 from ws4py.messaging import BinaryMessage
 
-from .. import const
-from .. import socket
+from .. import const, socket
 
 __all__ = ["BinaryMessage", "WebSocketClient"]
 
@@ -17,12 +16,12 @@ class WebSocketClient(WebSocketBaseClient):
 
     def __init__(self, server, url=None, params=None):
         if url is None:
-            url = "ws://{}:{}".format(const.FAKE_HTTP_HOST, const.FAKE_HTTP_PORT)
+            url = f"ws://{const.FAKE_HTTP_HOST}:{const.FAKE_HTTP_PORT}"
 
         if params is not None:
-            url = "{}?{}".format(url, urlencode(params))
+            url = f"{url}?{urlencode(params)}"
 
-        super(WebSocketClient, self).__init__(url=url)
+        super().__init__(url=url)
 
         self.client_socket = self.fake_socket_class()
         self.server_socket = self.fake_socket_class()
@@ -105,7 +104,7 @@ class WebSocketClient(WebSocketBaseClient):
         old_size = len(self._messages)
 
         while old_size == len(self._messages):
-            if not super(WebSocketClient, self).once():
+            if not super().once():
                 return False
 
         return True

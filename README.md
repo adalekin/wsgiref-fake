@@ -77,11 +77,11 @@ Run the test suite:
 uv run pytest
 ```
 
-Lint and format tests (library code is excluded from Ruff in this repo’s config):
+Lint and format the whole tree:
 
 ```bash
-uv run ruff check tests
-uv run ruff format tests
+uv run ruff check .
+uv run ruff format .
 ```
 
 ## Contributing

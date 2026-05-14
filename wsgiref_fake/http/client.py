@@ -3,11 +3,10 @@ import json as json_
 import six
 from six.moves import http_client
 
-from .. import const
-from .. import socket
+from .. import const, socket
 
 
-class HTTPClient(object):
+class HTTPClient:
     def __init__(self, server):
         self._server = server
 
@@ -35,8 +34,8 @@ class HTTPClient(object):
 
         for header_name, header_value in six.iteritems(headers):
             fake_client.putheader(header_name, header_value)
-        fake_client._buffer.extend((b"", body, b"", b""))  # noqa pylint: disable=protected-access
-        raw_request = b"\r\n".join(fake_client._buffer)  # noqa pylint: disable=protected-access
+        fake_client._buffer.extend((b"", body, b"", b""))
+        raw_request = b"\r\n".join(fake_client._buffer)
 
         # Make a request
         client_socket.sendall(raw_request)

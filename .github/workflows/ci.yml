@@ -29,10 +29,10 @@ jobs:
         run: uv sync --python ${{ matrix.python-version }} --locked
 
       - name: Ruff check
-        run: uv run ruff check wsgiref_fake tests
+        run: uv run ruff check .
 
       - name: Ruff format (verify)
-        run: uv run ruff format --check wsgiref_fake tests
+        run: uv run ruff format --check .
 
       - name: Pytest
         run: uv run pytest
