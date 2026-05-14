@@ -31,6 +31,8 @@ def make_server(  # noqa pylint: disable=bad-continuation
             if result is not None:
                 if six.PY2:
                     return [x.encode("iso-8859-1") for x in result]
+                # Python 3 WSGI requires byte chunks; keep str responses working.
+                return [x.encode("utf-8") if isinstance(x, str) else x for x in result]
 
             return result
 

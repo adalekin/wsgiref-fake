@@ -23,6 +23,8 @@ class HTTPClient(object):
 
         if json:
             body = json_.dumps(json)
+            if not isinstance(body, bytes):
+                body = body.encode("utf-8")
             headers["Content-Type"] = "application/json"
             headers["Content-Length"] = len(body)
         else:
